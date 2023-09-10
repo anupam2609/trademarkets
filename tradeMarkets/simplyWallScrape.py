@@ -54,6 +54,7 @@ for elements_ in soupUSTopGainers.findAll(class_=industryClass):
     industryList.append(elements_.text)
 
 topGainers_df=pd.DataFrame(zip(tickerNamelist, companyNameslist, industryList), columns=['Ticker', 'CompanyName', 'Industry'])
+# print(topGainers_df)
 
 
 #############################################################################################################################################

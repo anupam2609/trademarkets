@@ -16,16 +16,28 @@ from datetime import date
 from datetime import timedelta
 import json
 from tradelib import tradelibpy
+import os
+import simplyWallScrape as sw
 
-
+usTopGainers_df=sw.topGainers_df
+usSectorTrends=sw.Sector_Trend_US_df
+usSectorTrends=usSectorTrends[['Sector', 'Returns']]
  #Content space for pulling any pre requisite data and object setup
 
-tb=tradelibpy()        
-file=open("Reference.json")
-ref_js=json.load(file)
+tb=tradelibpy() 
+
+
+ReferenceJsonhere       =       os.path.dirname(os.path.abspath("Reference.json"))
+ReferenceJsonFilePath   =       os.path.join(ReferenceJsonhere, 'tradeMarkets/Reference.json')       
+RefJsonOpen             =       open(ReferenceJsonFilePath)
+ref_js                  =       json.load(RefJsonOpen)
+
 
 #default_Summary:
-defaultsum=pd.read_csv(r'default_summary.csv')
+defaultSummaryhere      =       os.path.dirname(os.path.abspath("default_summary.csv"))
+defaultSummaryFilePath  =       os.path.join(defaultSummaryhere, 'tradeMarkets/default_summary.csv')
+defaultSummaryOpen      =       open(defaultSummaryFilePath)
+defaultsum              =       pd.read_csv(defaultSummaryFilePath)
 
 
 
@@ -78,9 +90,9 @@ app.layout=html.Div(children=   [
                                                                         id='my-date-picker-range',
                                                                         min_date_allowed=date(2021, 8, 1),
                                                                         max_date_allowed=date.today(),
-                                                                        initial_visible_month=date(2021, 8, 1),
+                                                                        initial_visible_month=date(2022, 8, 1),
                                                                         end_date=date.today(),
-                                                                        start_date=date(2021,8,1)
+                                                                        start_date=date(2022,8,1)
                                                                         #start_date_placeholder_text='Start Date'
                                                                         #calendar_orientation='vertical'
                                                                                 ),
@@ -144,7 +156,47 @@ app.layout=html.Div(children=   [
                         ],
                      style={'text-align':'center'}   
                         
-                    )
+                    ),
+                html.Div(className='topGainers',
+                         children=[
+                                html.Br(),
+                                html.Br(),
+                                html.Div(html.H2("U.S. Stocks -Top Gainers of the day!")),
+                                dash_table.DataTable(usTopGainers_df.to_dict('records'), [{"name": i, "id": i} for i in usTopGainers_df.columns]),
+                                html.Br(),
+                                html.Br(),
+
+                         ],
+                         style={'text-align':'center',
+                                'width': '20%',
+                                'height':'0.9em',
+                                'vertical-align': 'top',
+                                # 'padding-left':'0px',
+                                # 'padding-right':'0px',
+                                'text-align':'left',
+                                'display':'inline-block',
+                                'margin':'5px'}  
+                         ),
+                html.Div(className='SectorTrends',
+                         children=[
+                                html.Br(),
+                                html.Br(),
+                                html.Div(html.H2("U.S. Stocks -Sector Trends!")),
+                                dash_table.DataTable(usSectorTrends.to_dict('records'), [{"name": i, "id": i} for i in usSectorTrends.columns]),
+                                html.Br(),
+                                html.Br(),
+
+                         ],
+                         style={'text-align':'center',
+                                'width': '20%',
+                                'height':'0.9em',
+                                'vertical-align': 'top',
+                                # 'padding-left':'0px',
+                                # 'padding-right':'0px',
+                                'text-align':'left',
+                                'display':'inline-block',
+                                'margin':'5px'}  
+                         )
                     ],
                                 
             style={'backgroundColor':'white',
