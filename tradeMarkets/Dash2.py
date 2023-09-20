@@ -118,16 +118,22 @@ app.layout=html.Div(children=   [
                                                                 html.Div("Time Interval Function"),
                                                                 dcc.Dropdown(options=['Weekly Time Series', 'Monthly Time Series'], value='Weekly Time Series', id='trendDD')
                                                         ],
-                                                style={
-                                                        'width': '20%',
-                                                        'height':'0.9em',
-                                                        # 'padding-left':'0px',
-                                                        # 'padding-right':'0px',
-                                                        'text-align':'left',
-                                                        'display':'inline-block'
+                                                        style={ 
+                                                                # 'font-size':'2px',
+                                                                'width': '20%',
+                                                                'height':'1.0em',
+                                                                'padding-left':'0px',
+                                                                'padding-right':'0px',
+                                                                'text-align':'center',
+                                                                'display':'inline-block'
+                                                                # 'height':'0.9em',
                                                         } 
                                                 ),
-                                                html.Br()
+
+                                                html.Br(),
+                                                html.Br(),
+                                                html.Br(),
+
                                             
                                         ]
 
@@ -142,9 +148,7 @@ app.layout=html.Div(children=   [
                         html.Br(),
                         html.Div(id='output-container-date-picker-range'),
                         html.Br(),
-                        html.Br(),
                         # html.Output(id='errMessage'),
-                        html.Br(),
                         # html.Div(className='stockSummary',
                         #         children=[
                         #                 dash_table.DataTable(defaultsum.to_dict('records'),[{"name": i, "id": i} for i in defaultsum.columns], id='summary_tbl')
@@ -157,52 +161,60 @@ app.layout=html.Div(children=   [
                      style={'text-align':'center'}   
                         
                     ),
-                html.Div(className='topGainers',
-                         children=[
-                                html.Br(),
-                                html.Br(),
-                                html.Div(html.H2("U.S. Stocks -Top Gainers of the day!")),
-                                dash_table.DataTable(usTopGainers_df.to_dict('records'), [{"name": i, "id": i} for i in usTopGainers_df.columns]),
-                                html.Br(),
-                                html.Br(),
 
-                         ],
-                         style={'text-align':'center',
-                                'width': '20%',
-                                'height':'0.9em',
-                                'vertical-align': 'top',
-                                # 'padding-left':'0px',
-                                # 'padding-right':'0px',
-                                'text-align':'left',
-                                'display':'inline-block',
-                                'margin':'5px'}  
-                         ),
-                html.Div(className='SectorTrends',
-                         children=[
-                                html.Br(),
-                                html.Br(),
-                                html.Div(html.H2("U.S. Stocks -Sector Trends!")),
-                                dash_table.DataTable(usSectorTrends.to_dict('records'), [{"name": i, "id": i} for i in usSectorTrends.columns]),
-                                html.Br(),
-                                html.Br(),
+                html.Div(
+                        className      =        'sectorTables',
+                        style          =        {
+                                                'text-align':'center',
+                                                'position': 'relative'    
+                                                },
+                        children        =       (
+                                                html.Div(       className       =       'topGainers',
+                                                                children        =       [
+                                                                                        html.Br(),
+                                                                                        html.Div(html.H2("U.S. Stocks -Top Gainers of the day!")),
+                                                                                        dash_table.DataTable(usTopGainers_df.to_dict('records'), 
+                                                                                                             [{"name": i, "id": i} for i in usTopGainers_df.columns],
+                                                                                                             style_cell={'textAlign': 'center'}
+                                                                                                             ),
+                                                                                        html.Br(),
+                                                                                        html.Br(),
 
-                         ],
-                         style={'text-align':'center',
-                                'width': '20%',
-                                'height':'0.9em',
-                                'vertical-align': 'top',
-                                # 'padding-left':'0px',
-                                # 'padding-right':'0px',
-                                'text-align':'left',
-                                'display':'inline-block',
-                                'margin':'5px'}  
-                         )
+                                                                                        ],
+                                                                style           =       {
+                                                                                        'text-align':'center',
+                                                                                        'margin':'5px'
+                                                                                        }  
+                                                        ),
+                                                html.Div(       className       =       'SectorTrends',
+                                                                children        =       [
+                                                                                        html.Br(),
+                                                                                        html.Div(html.H2("U.S. Stocks -Sector Trends!")),
+                                                                                        dash_table.DataTable(usSectorTrends.to_dict('records'), 
+                                                                                                             [{"name": i, "id": i} for i in usSectorTrends.columns], 
+                                                                                                             style_cell={'textAlign': 'center'}
+                                                                                                             ),
+                                                                                        html.Br(),
+                                                                                        html.Br(),
+
+                                                                                        ],
+                                                                style           =       { 
+                                                                                        'margin': 'auto',
+                                                                                        'text-align':'center',
+                                                                                        'textAlign' : 'center',
+                                                                                        'padding-left':'100px',
+                                                                                        'padding-right':'100px',
+                                                                                        'margin':'5px'
+                                                                                        }  
+                                                        )
+                                                )
+                        )
+
                     ],
                                 
             style={'backgroundColor':'white',
-                    'color':'black'
-                    # 'width':'39%',
-                    # 'display':'inline-block'
+                    'color':'black',
+                    'text-align':'center',
                     }
                     )
 
