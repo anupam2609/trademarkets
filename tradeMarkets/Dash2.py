@@ -212,7 +212,10 @@ app.layout=html.Div(children=   [
 
                     ],
                                 
-            style={'backgroundColor':'white',
+            style={
+                #   'backgroundColor':'white',
+                   'backgroundColor': '#efefef',
+                #    'mix-blend-mode': 'multiply',
                     'color':'black',
                     'text-align':'center',
                     }
