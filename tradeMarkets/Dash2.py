@@ -19,13 +19,21 @@ from tradelib import tradelibpy
 import os
 import simplyWallScrape as sw
 
-usTopGainers_df=sw.topGainers_df
-usSectorTrends=sw.Sector_Trend_US_df
-usSectorTrends=usSectorTrends[['Sector', 'Returns']]
- #Content space for pulling any pre requisite data and object setup
-
 tb=tradelibpy() 
 
+
+#US Market Data Pull
+usTopGainers_df         =       sw.topGainers_df
+usSectorTrends          =       sw.Sector_Trend_US_df
+usSectorTrends          =       usSectorTrends[['Sector', 'Returns']]
+
+#US Market Data pull Exclusive to Alphavantage API
+usTopGainersAlpha_df        =       tb.getUSTopGainersAlpha()
+usTopLosersAlpha_df         =       tb.getUSTopLosersAlpha()
+
+
+
+ #Content space for pulling any pre requisite data and object setup
 
 ReferenceJsonhere       =       os.path.dirname(os.path.abspath("Reference.json"))
 ReferenceJsonFilePath   =       os.path.join(ReferenceJsonhere, 'tradeMarkets/Reference.json')       
@@ -208,6 +216,55 @@ app.layout=html.Div(children=   [
                                                                                         }  
                                                         )
                                                 )
+                        ),
+                html.Br(),
+                html.Div(
+                        className      =        'usAlphaSectorTables',
+                        style          =        {
+                                                'text-align':'center',
+                                                'position': 'relative'    
+                                                },
+                        children        =       (
+                                                html.Div(       className       =       'usAlphaTopGainers',
+                                                                children        =       [
+                                                                                        html.Br(),
+                                                                                        html.Div(html.H2("U.S -Top Gainers of the day!(AlphaVantage)")),
+                                                                                        dash_table.DataTable(usTopGainersAlpha_df.to_dict('records'), 
+                                                                                                             [{"name": i, "id": i} for i in usTopGainersAlpha_df.columns],
+                                                                                                             style_cell={'textAlign': 'center'}
+                                                                                                             ),
+                                                                                        html.Br(),
+                                                                                        html.Br(),
+
+                                                                                        ],
+                                                                style           =       {
+                                                                                        'text-align':'center',
+                                                                                        'margin':'5px'
+                                                                                        }  
+                                                        ),
+                                                html.Div(       className       =       'usAlphaSectorTrends',
+                                                                children        =       [
+                                                                                        html.Br(),
+                                                                                        html.Div(html.H2("U.S -Top Losers of the day!(AlphaVantage)")),
+                                                                                        dash_table.DataTable(usTopLosersAlpha_df.to_dict('records'), 
+                                                                                                             [{"name": i, "id": i} for i in usTopLosersAlpha_df.columns], 
+                                                                                                             style_cell={'textAlign': 'center'}
+                                                                                                             ),
+                                                                                        html.Br(),
+                                                                                        html.Br(),
+
+                                                                                        ],
+                                                                style           =       { 
+                                                                                        'margin': 'auto',
+                                                                                        'text-align':'center',
+                                                                                        'textAlign' : 'center',
+                                                                                        'padding-left':'100px',
+                                                                                        'padding-right':'100px',
+                                                                                        'margin':'5px'
+                                                                                        }  
+                                                        )
+                                                )
+                      
                         )
 
                     ],
