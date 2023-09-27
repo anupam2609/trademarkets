@@ -160,8 +160,50 @@ class tradelibpy:
         dataF=dataF[(dataF.datepart>=start_date) | (dataF.datepart>=end_date)]
         return dataF
 
+
+
     
+    def getUSTopGainersAlpha(self):
+            #the func gets you the top 20 gainers of the day for US Market using Alphavantage API
+        urlGetIndTopGainers =   'https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=' + self.apikey
+        readTG              =   requests.get(urlGetIndTopGainers)
+        extract             =   readTG.json()
+        metadataTG            =   extract['metadata']
+        lastUpdatedTG         =   extract['last_updated']
+        data                =   extract['top_gainers']
+        topGainers_df       =   pd.DataFrame(data)
+
+            # Sorting the dataframe in descending order by Change Percentage
+        topGainers_df['change_percentage']    = topGainers_df['change_percentage'].str.rstrip("%").astype(float)/100
+        topGainers_df.sort_values(by=['change_percentage'], ascending=False, inplace=True)
+
+        return topGainers_df
+    
+    def getUSTopLosersAlpha(self):
+            #the func gets you the top 20 Losers of the day for US Market using AlphaVantage
+        urlGetIndTopLosers =   'https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=' + self.apikey
+        readTL              =   requests.get(urlGetIndTopLosers)
+        extract             =   readTL.json()
+        metadataTL          =   extract['metadata']
+        lastUpdatedTL        =   extract['last_updated']
+        data                =   extract['top_losers']
+        topLosers_df       =   pd.DataFrame(data)
+
+            # Sorting the dataframe in descending order by Change Percentage
+        topLosers_df['change_percentage']    = topLosers_df['change_percentage'].str.rstrip("%").astype(float)/100
+        topLosers_df.sort_values(by=['change_percentage'], ascending=True, inplace=True)
+
+        return topLosers_df
+
+
+
+
+
+
+
+
+
+
+
 
 #Information on functions and process to call them
-
-
