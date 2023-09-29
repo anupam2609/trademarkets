@@ -161,6 +161,37 @@ class tradelibpy:
         return dataF
 
 
+    def getTimeSeriesDailyStockData(self, ticker_, startDate, endDate):
+            #The function helps in getting daily stock data for a specified date period.
+            #This is an Alphavantage API Call
+        
+        dailyUrl    =   'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+ ticker_ + '&outputsize=full' +'&apikey='   +   self.apikey
+        readDailyUrl    =   requests.get(dailyUrl)
+        dailyData       =   readDailyUrl.json()
+        dailyData       =   dailyData['Time Series (Daily)']
+        total_rec=[]
+        for vals in dailyData:
+            temp={
+                'datepart':'',
+                'open':'',
+                'close':'',
+                'high':'',
+                'low':'',
+                'volume':''
+            }
+            temp['datepart']=vals
+            temp["open"]=dailyData[vals]["1. open"]
+            temp["close"]=dailyData[vals]["4. close"]
+            temp["high"]=dailyData[vals]["2. high"]
+            temp["low"]=dailyData[vals]["3. low"]
+            temp["volume"]=dailyData[vals]["5. volume"]
+            total_rec.append(temp)
+        dailyData_df    =   pd.DataFrame(total_rec)
+        start_date      =   startDate
+        end_date        =   endDate
+        dataF           =   dailyData_df[(dailyData_df.datepart>=start_date) | (dailyData_df.datepart>=end_date)]
+        
+        return dataF
 
     
     def getUSTopGainersAlpha(self):

@@ -3,16 +3,13 @@
     #New features will be added based on the business use case
 
 
-
-
-
         #Added libraries 
 from dash import Dash, dcc, html, Input, Output, State, dash_table
 import plotly.express as px
 import pandas as pd
 import yfinance as yf
 import plotly.graph_objects as go
-from datetime import date
+from datetime import date, datetime
 from datetime import timedelta
 import json
 from tradelib import tradelibpy
@@ -33,8 +30,7 @@ usTopLosersAlpha_df         =       tb.getUSTopLosersAlpha()
 
 
 
- #Content space for pulling any pre requisite data and object setup
-
+#Content space for pulling any pre requisite data and object setup
 ReferenceJsonhere       =       os.path.dirname(os.path.abspath("Reference.json"))
 ReferenceJsonFilePath   =       os.path.join(ReferenceJsonhere, 'tradeMarkets/Reference.json')       
 RefJsonOpen             =       open(ReferenceJsonFilePath)
@@ -50,7 +46,6 @@ defaultsum              =       pd.read_csv(defaultSummaryFilePath)
 
 
 app=Dash(__name__)
-
 
 
         #HomePage/LandingPage layout section
@@ -124,7 +119,8 @@ app.layout=html.Div(children=   [
                                                 html.Div(className='trendDropDown',
                                                         children=[
                                                                 html.Div("Time Interval Function"),
-                                                                dcc.Dropdown(options=['Weekly Time Series', 'Monthly Time Series'], value='Weekly Time Series', id='trendDD')
+                                                                dcc.Dropdown(options=['Daily Time Series','Weekly Time Series', 'Monthly Time Series'], 
+                                                                             value='Weekly Time Series', id='trendDD')
                                                         ],
                                                         style={ 
                                                                 # 'font-size':'2px',
@@ -324,12 +320,12 @@ def stockcandlestick(n_clicks, startDate, endDate, value, radio, trendDD):
                         data=tb.getTimeSeriesMonthlyStockData(value,startDate,endDate)
                         fig=go.Figure(go.Candlestick(x=data.datepart, open=data.open, close=data.close, high=data.high, low=data.low ))
                         fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"])])    
-
                 elif radio=='Indian Market':
                         value=value+'.BSE'
                         data=tb.getTimeSeriesMonthlyStockData(value,startDate,endDate)
                         fig=go.Figure(go.Candlestick(x=data.datepart, open=data.open, close=data.close, high=data.high, low=data.low ))
                         fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"])])
+
         elif trendDD=='Weekly Time Series':
                 if radio =='US Market':
                         # data = yf.download(value, start=startDate, end=endDate, interval="1d")
@@ -338,10 +334,20 @@ def stockcandlestick(n_clicks, startDate, endDate, value, radio, trendDD):
                         data=tb.getTimeSeriesWeeklyStockData(value,startDate,endDate)
                         fig=go.Figure(go.Candlestick(x=data.datepart, open=data.open, close=data.close, high=data.high, low=data.low ))
                         fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"])])    
-
                 elif radio=='Indian Market':
                         value=value+'.BSE'
                         data=tb.getTimeSeriesWeeklyStockData(value,startDate,endDate)
+                        fig=go.Figure(go.Candlestick(x=data.datepart, open=data.open, close=data.close, high=data.high, low=data.low ))
+                        fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"])])
+ 
+        elif trendDD=='Daily Time Series':
+                if radio  == 'US Market':
+                        data=tb.getTimeSeriesDailyStockData(value,startDate,endDate)
+                        fig=go.Figure(go.Candlestick(x=data.datepart, open=data.open, close=data.close, high=data.high, low=data.low ))
+                        fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"])])    
+                elif radio == 'Indian Market':
+                        value=value+'.BSE'
+                        data=tb.getTimeSeriesDailyStockData(value,startDate,endDate)
                         fig=go.Figure(go.Candlestick(x=data.datepart, open=data.open, close=data.close, high=data.high, low=data.low ))
                         fig.update_xaxes(rangebreaks=[dict(bounds=["sat", "mon"])])
 
