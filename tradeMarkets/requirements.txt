@@ -1,0 +1,9 @@
+pandas
+dash
+plotly-express
+plotly
+yfinance
+yahoo_fin
+requests
+requests_html
+cryptography==42.0.5
